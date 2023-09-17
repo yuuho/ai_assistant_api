@@ -1,0 +1,7 @@
+version: '3.9'
+
+services:
+    api_server:
+        environment:
+            - force_color_prompt=yes
+        command: sleep infinity
