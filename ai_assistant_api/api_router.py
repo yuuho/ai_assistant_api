@@ -1,10 +1,15 @@
-"""doc
+"""エンドポイントの定義
 """
+import logging
 from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 import uvicorn
+
+
+logger = logging.getLogger(__name__)
+logger.info('loaded api_router.py')
 
 
 class ApiServer:
@@ -37,8 +42,3 @@ class ApiServer:
         """サーバーを開始する
         """
         uvicorn.run(self.app, host="0.0.0.0")
-
-
-if __name__ == '__main__':
-    apiserver = ApiServer()
-    apiserver.launch()
