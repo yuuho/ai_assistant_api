@@ -15,4 +15,3 @@ services:
         ports:
             - 8039:8000
         command: python -m http.server
-        
