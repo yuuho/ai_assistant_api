@@ -27,6 +27,8 @@ handlers:
         filename: $LOGDIR/.sample.log
     # 保存先設定
     api_router_handler: {<<: *base_hdl, filename: $LOGDIR/api_router.log}
+    application_handler: {<<: *base_hdl, filename: $LOGDIR/application.log}
+    openai_handler: {<<: *base_hdl, filename: $LOGDIR/3rd_lib/openai.log}
 
 loggers:
     # 基本設定
@@ -37,9 +39,14 @@ loggers:
         propagate: no
     # 自作モジュールのログ設定
     api_router: {<<: *base_lgr, handlers: [api_router_handler] }
+    application: {<<: *base_lgr, handlers: [application_handler] }
     # サードパーティライブラリのログ伝播を止める
     uvicorn: {propagate: no}
     asyncio: {propagate: no}
+    numexpr: {propagate: no}
+    urllib3: {propagate: no}
+    # ログを取りたいライブラリ
+    openai: {<<: *base_lgr, handlers: [openai_handler] }
 
 root:
     level: DEBUG

@@ -18,10 +18,10 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py310_23.3.1-0-Linux-x86
     && echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc \
     && echo "conda activate base" >> ~/.bashrc
 
-RUN conda install -y fastapi uvicorn pyyaml -c conda-forge \
+RUN conda install -y fastapi uvicorn pyyaml langchain openai -c conda-forge \
     && conda clean -afy
 
-# RUN pip install --no-cache-dir responder typesystem==0.2.5 \
+# RUN pip install --no-cache-dir hogehoge \
 #     && rm -rf ~/.cache/pip
 
 

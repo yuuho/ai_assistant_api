@@ -1,14 +1,17 @@
 """エンドポイントの定義
 """
-import logging
+from logging import getLogger
 from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 import uvicorn
 
+from application import ChatGPT
+from api_models.request import PromptReq
 
-logger = logging.getLogger(__name__)
+
+logger = getLogger(__name__)
 logger.info('loaded api_router.py')
 
 
@@ -17,19 +20,23 @@ class ApiServer:
     """
 
     def __init__(self):
-        self.app = FastAPI()
+        self.api = FastAPI()
 
-        self.app.add_api_route('/status', self.status)
-        self.app.add_api_route('/health', self.health)
+        self.api.add_api_route('/status', self.status, methods=["GET"])
+        self.api.add_api_route('/health', self.health, methods=["POST"])
+        self.api.add_api_route('/chat', self.chat, methods=["POST"])
 
         # ルートに静的ファイルを置くときはAPI定義後に追加する
         static_path = str((Path(__file__).parent / 'static').resolve())
-        self.app.mount('/', StaticFiles(directory=static_path, html=True),
+        self.api.mount('/', StaticFiles(directory=static_path, html=True),
                        name="static")
+
+        self.chat_app = ChatGPT()
 
     def status(self):
         """サーバーステータスを表示
         """
+        print('status ok!!')
         return {"status": "OK"}
 
     def health(self, req):
@@ -38,7 +45,14 @@ class ApiServer:
         print(req)
         return {"status": "OK"}
 
+    def chat(self, req: PromptReq):
+        """一回だけの応答
+        """
+        prompt = req.prompt
+        ret = self.chat_app.chat(prompt)
+        return {"result": ret}
+
     def launch(self):
         """サーバーを開始する
         """
-        uvicorn.run(self.app, host="0.0.0.0")
+        uvicorn.run(self.api, host="0.0.0.0")

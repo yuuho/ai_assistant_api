@@ -5,10 +5,12 @@ services:
         build:
             context: .
             dockerfile: ./dockerfiles/api_server/Dockerfile
-        image: ai_assistant_api:v0.2
+        image: ai_assistant_api:v0.3
         container_name: ai_assistant_api_server
         volumes:
             - .:/workspaces/ai_assistant_api
+        env_file:
+            - .env
         working_dir: /workspaces/ai_assistant_api
         ports:
             - 8039:8000
