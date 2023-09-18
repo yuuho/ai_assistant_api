@@ -1,0 +1,18 @@
+{
+    "dockerComposeFile": ["../docker-compose.yaml", "docker-compose.yaml"],
+    "service": "api_server",
+    "workspaceFolder": "/workspaces/ai_assistant_api",
+    "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}",
+
+    "customizations": {
+        "vscode": {
+            "extensions": ["ms-python.pylint", "ms-python.flake8"],
+            "settings":{
+                "python.pythonPath": "/opt/conda/bin/python",
+                "python.analysis.extraPaths" : [
+                    "/opt/conda/lib/python3.10/site-packages/"
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,53 @@
+version: 1
+ 
+formatters:
+    rootformat:
+        format: '[!ROOT LOGGER] %(name)s %(levelname)s: %(message)s'
+    myformatter:
+        format: '[%(asctime)s.%(msecs)03d] %(name)s - %(levelname)s: %(message)s'
+        datefmt: '%Y/%d/%m %H:%M:%S'
+
+handlers:
+    # ルートロガー用設定
+    root_stdio_handler:
+        class: logging.StreamHandler
+        level: DEBUG
+        formatter: rootformat
+        stream: ext://sys.stdout
+    root_file_handler:
+        class: logging.FileHandler
+        level: DEBUG
+        formatter: rootformat
+        filename: $LOGDIR/__root_logger__.log
+    # 基本設定
+    sample_handler: &base_hdl
+        class: logging.FileHandler
+        level: DEBUG
+        formatter: myformatter
+        filename: $LOGDIR/.sample.log
+    # 保存先設定
+    api_router_handler: {<<: *base_hdl, filename: $LOGDIR/api_router.log}
+    application_handler: {<<: *base_hdl, filename: $LOGDIR/application.log}
+    openai_handler: {<<: *base_hdl, filename: $LOGDIR/3rd_lib/openai.log}
+
+loggers:
+    # 基本設定
+    sample_logger: &base_lgr
+        handlers: [sample_handler]
+        level: DEBUG
+        qualname: console
+        propagate: no
+    # 自作モジュールのログ設定
+    api_router: {<<: *base_lgr, handlers: [api_router_handler] }
+    application: {<<: *base_lgr, handlers: [application_handler] }
+    # サードパーティライブラリのログ伝播を止める
+    uvicorn: {propagate: no}
+    asyncio: {propagate: no}
+    numexpr: {propagate: no}
+    urllib3: {propagate: no}
+    # ログを取りたいライブラリ
+    openai: {<<: *base_lgr, handlers: [openai_handler] }
+
+root:
+    level: DEBUG
+    handlers: [root_stdio_handler, root_file_handler]
