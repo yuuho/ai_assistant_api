@@ -14,4 +14,4 @@ services:
         working_dir: /workspaces/ai_assistant_api
         ports:
             - 8039:8000
-        command: python -m http.server
+        command: make start_service
