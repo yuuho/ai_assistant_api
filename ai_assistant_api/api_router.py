@@ -5,6 +5,7 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 from application import ChatGPT
@@ -14,6 +15,10 @@ from api_models.request import PromptReq
 logger = getLogger(__name__)
 logger.info('loaded api_router.py')
 
+origins = [
+    "http://localhost:5173",
+]
+
 
 class ApiServer:
     """APIサーバークラス
@@ -21,6 +26,14 @@ class ApiServer:
 
     def __init__(self):
         self.api = FastAPI()
+
+        self.api.add_middleware(
+            CORSMiddleware,
+            allow_origins=origins,
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
 
         self.api.add_api_route('/status', self.status, methods=["GET"])
         self.api.add_api_route('/health', self.health, methods=["POST"])
