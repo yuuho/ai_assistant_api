@@ -4,3 +4,6 @@ __pycache__/
 /.env
 /playground/
 /tmp/
+
+__bkup.*
+*.db

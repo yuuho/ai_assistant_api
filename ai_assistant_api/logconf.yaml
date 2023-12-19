@@ -29,6 +29,8 @@ handlers:
     api_router_handler: {<<: *base_hdl, filename: $LOGDIR/api_router.log}
     application_handler: {<<: *base_hdl, filename: $LOGDIR/application.log}
     openai_handler: {<<: *base_hdl, filename: $LOGDIR/3rd_lib/openai.log}
+    passlib_handler: {<<: *base_hdl, filename: $LOGDIR/3rd_lib/passlib.log}
+    fastapi_handler: {<<: *base_hdl, filename: $LOGDIR/3rd_lib/fastapi.log}
 
 loggers:
     # 基本設定
@@ -40,11 +42,13 @@ loggers:
     # 自作モジュールのログ設定
     api_router: {<<: *base_lgr, handlers: [api_router_handler] }
     application: {<<: *base_lgr, handlers: [application_handler] }
-    # サードパーティライブラリのログ伝播を止める
-    uvicorn: {propagate: no}
+    # サードパーティライブラリのログ伝播を止める、uvicorn だけ他ファイルに記載
     asyncio: {propagate: no}
     numexpr: {propagate: no}
     urllib3: {propagate: no}
+    multipart: {propagate: no}
+    passlib: {<<: *base_lgr, handlers: [passlib_handler] }
+    fastapi: {<<: *base_lgr, handlers: [fastapi_handler] }
     # ログを取りたいライブラリ
     openai: {<<: *base_lgr, handlers: [openai_handler] }
 

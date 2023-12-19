@@ -20,8 +20,9 @@ RUN wget https://repo.anaconda.com/miniconda/Miniconda3-py310_23.3.1-0-Linux-x86
 
 RUN conda install -y fastapi uvicorn pyyaml langchain openai -c conda-forge \
     && conda clean -afy
+# RUN conda install --name base --file conda_list.txt
 
-# RUN pip install --no-cache-dir hogehoge \
-#     && rm -rf ~/.cache/pip
+RUN pip install --no-cache-dir python-jose passlib python-multipart \
+    && rm -rf ~/.cache/pip
 
 
