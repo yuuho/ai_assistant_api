@@ -4,6 +4,7 @@ services:
     api_server:
         # docker-compose での起動と devcontainer 起動を明示的に分けるとき
         container_name: ai_assistant_api_server_vsc
+        ports: [ 8038:8000 ]
         ##
         environment:
             - force_color_prompt=yes

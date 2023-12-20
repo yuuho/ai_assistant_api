@@ -6,6 +6,7 @@ from pathlib import Path
 from fastapi import FastAPI, Depends
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
 from application import ChatGPT
@@ -15,6 +16,10 @@ from auth import db_api, auth_api, database_initialize
 
 logger = getLogger(__name__)
 logger.info('loaded api_router.py')
+
+origins = [
+    "http://localhost:5173",
+]
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -26,6 +31,14 @@ class ApiServer:
 
     def __init__(self):
         self.api = FastAPI()
+
+        self.api.add_middleware(
+            CORSMiddleware,
+            allow_origins=origins,
+            allow_credentials=True,
+            allow_methods=["*"],
+            allow_headers=["*"],
+        )
 
         self.api.add_api_route('/status', self.status, methods=["GET"])
         # self.api.add_api_route('/health', self.health, methods=["POST"])

@@ -13,4 +13,7 @@
     - VSCode "open in devcontainer"
 3. (devcontainerのときのみ) サーバーの起動
     - `make start_service` or `python ai_assistant_api/__main__.py`
-4. SwaggerUI でテスト [localhost:8039/docs](localhost:8039/docs)
+4. SwaggerUI でテスト
+    - dockerを直接起動している場合 [localhost:8039/docs](localhost:8039/docs)
+    - devcontainer の中でサーバーを起動している場合 [localhost:8038/docs](localhost:8038/docs)
+
