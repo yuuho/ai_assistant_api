@@ -40,16 +40,18 @@ class ApiServer:
             allow_headers=["*"],
         )
 
-        self.api.add_api_route('/status', self.status, methods=["GET"])
+        self.api.add_api_route('/status', self.status, methods=["GET"],
+                               summary="サーバー稼働状況を確認")
         # self.api.add_api_route('/health', self.health, methods=["POST"])
-        self.api.add_api_route('/chat', self.chat, methods=["POST"])
+        self.api.add_api_route('/chat', self.chat, methods=["POST"],
+                               summary="チャット(単一の応答)")
+        self.api.add_api_route('/api_key', self.key_check, methods=["GET"],
+                               summary="OpenAI API Key の確認")
 
         # 認証機能
         database_initialize()
         self.api.include_router(db_api.router)
         self.api.include_router(auth_api.router)
-
-        self.api.add_api_route('/secret', self.secret, methods=["POST"])
 
         # ルートに静的ファイルを置くときはAPI定義後に追加する
         static_path = str((Path(__file__).parent / 'static').resolve())
@@ -61,7 +63,7 @@ class ApiServer:
     def status(self):
         """サーバーステータスを表示
         """
-        print('status ok!!')
+        logger.info('status check called.')
         return {"status": "OK"}
 
     def health(self, req):
@@ -70,17 +72,17 @@ class ApiServer:
         print(req)
         return {"status": "OK"}
 
-    def chat(self, req: PromptReq):
+    def chat(self, req: PromptReq, token: str = Depends(oauth2_scheme)):
         """一回だけの応答
         """
         prompt = req.prompt
         ret = self.chat_app.chat(prompt)
-        return {"result": ret}
+        return {"result": ret, "login_token": token}
 
-    def secret(self, token: str = Depends(oauth2_scheme)):
-        """ログインしていないと取得できない情報を返す
+    def key_check(self, token: str = Depends(oauth2_scheme)):
+        """登録している OpenAI API Key を確認する
         """
-        return {"result": f"secret info : {token}"}
+        return {"api_key": self.chat_app.get_api_key(), "login_token": token}
 
     def launch(self, uvicorn_logconf):
         """サーバーを開始する
