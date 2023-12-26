@@ -32,3 +32,7 @@ class ChatGPT:
             logger.warning(str(exp))
         logger.info('chat done.')
         return ret
+
+    def get_api_key(self):
+        logger.info(f'called get api key : {self.model.openai_api_key}')
+        return self.model.openai_api_key
