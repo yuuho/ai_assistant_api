@@ -1,0 +1,52 @@
+<meta charset="utf-8"><link rel="icon" href="data:,">
+<script>window.addEventListener('load',async ()=>{
+////////////////////////////////////////////////////////////////////////////////
+
+    // ログイン
+    const login = async ()=>{
+        const formData = new FormData();
+        Object.entries({
+            'grant_type'    :'',
+            'username'      :'string',
+            'password'      :'string',
+            'scope'         :'',
+            'client_id'     :'',
+            'client_secret' :''
+        }).map((kv)=>formData.append(...kv));
+
+        const response = await fetch('/token',{
+            method: 'POST',
+            body: formData
+        });
+        return response.json();
+    };
+
+    // チャット
+    const chat = async (token)=>{
+        const response = await fetch('/chat',{
+            method: 'POST',
+            headers:{
+                'Content-Type':'application/json',
+                'Authorization': 'Bearer '+token,
+            },
+            body: JSON.stringify({
+                'prompt': 'hello!'
+            }),
+        });
+        return response.json();
+    };
+
+    // ログインしてトークンを取得
+    const login_resp = await login();
+    console.log(login_resp);
+
+    const access_token = login_resp.access_token;
+    console.log(access_token);
+
+    // トークンを使って対話
+    const chat_resp = await chat(access_token);
+    console.log(chat_resp);
+
+////////////////////////////////////////////////////////////////////////////////
+},false);</script>
+<body><p>login test</p></body>
