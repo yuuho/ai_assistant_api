@@ -72,12 +72,15 @@ class ApiServer:
         print(req)
         return {"status": "OK"}
 
-    def chat(self, req: PromptReq, token: str = Depends(oauth2_scheme)):
+    # LOGIN
+    # def chat(self, req: PromptReq, token: str = Depends(oauth2_scheme)):
+    def chat(self, req: PromptReq):
         """一回だけの応答
         """
         prompt = req.prompt
         ret = self.chat_app.chat(prompt)
-        return {"result": ret, "login_token": token}
+        # return {"result": ret, "login_token": token}  # LOGIN
+        return {"result": ret}
 
     def key_check(self, token: str = Depends(oauth2_scheme)):
         """登録している OpenAI API Key を確認する
